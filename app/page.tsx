@@ -30,9 +30,18 @@ export default function Home() {
       <Avatar className="absolute top-[50%] left-120 bg-[url(/jero.png)]" />
       <Avatar className="absolute top-[20%] left-120 bg-[url(/mati.png)]" />
       <Avatar className="absolute bottom-[10%] left-120 bg-[url(/joaco.png)]" />
-      <Avatar name="EM" className="absolute top-[50%] left-180" />
+      <Avatar name="EM" className="absolute top-[50%] left-180 bg-blue-500" />
       <Avatar className="absolute top-[20%] left-180 bg-[url(/giuli.png)]" />
       <Avatar className="absolute bottom-[10%] left-180 bg-[url(/agus.png)]" />
+      {/* otro equipo */}
+
+      <Avatar name="NN" className="absolute top-[50%] right-60  " />
+      <Avatar name="NN" className="absolute top-[50%] right-120" />
+      <Avatar name="NN" className="absolute top-[20%] right-120" />
+      <Avatar name="NN" className="absolute bottom-[10%] right-120 " />
+      <Avatar name="NN" className="absolute top-[50%] right-180" />
+      <Avatar name="NN" className="absolute top-[20%] right-180 " />
+      <Avatar name="NN" className="absolute bottom-[10%] right-180 " />
     </main>
   );
 }
