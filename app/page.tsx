@@ -64,6 +64,6 @@ function Avatar({
     </div>
   );
 }
-export function cn(...inputs: ClassValue[]) {
+function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
