@@ -26,22 +26,28 @@ export default function Home() {
       className=" relative h-screen w-screen bg-contain bg-no-repeat bg-center bg-green-900 flex items-center justify-center"
       style={{ backgroundImage }}
     >
-      <Avatar name="JR" className="absolute top-[50%] left-60 " />
-      <Avatar name="JV" className="absolute top-[50%] left-120" />
-      <Avatar name="MI" className="absolute top-[20%] left-120" />
-      <Avatar name="LE" className="absolute bottom-[10%] left-120" />
+      <Avatar className="absolute top-[50%] left-60 bg-[url(/lauti.png)] " />
+      <Avatar className="absolute top-[50%] left-120 bg-[url(/jero.png)]" />
+      <Avatar className="absolute top-[20%] left-120 bg-[url(/mati.png)]" />
+      <Avatar className="absolute bottom-[10%] left-120 bg-[url(/joaco.png)]" />
       <Avatar name="EM" className="absolute top-[50%] left-180" />
-      <Avatar name="GS" className="absolute top-[20%] left-180" />
-      <Avatar name="AR" className="absolute bottom-[10%] left-180 " />
+      <Avatar className="absolute top-[20%] left-180 bg-[url(/giuli.png)]" />
+      <Avatar className="absolute bottom-[10%] left-180 bg-[url(/agus.png)]" />
     </main>
   );
 }
 
-function Avatar({ name, className = "" }: { name: string; className: string }) {
+function Avatar({
+  name,
+  className = "",
+}: {
+  name?: string;
+  className: string;
+}) {
   return (
     <div
       className={cn(
-        "w-20 flex justify-center items-center  -translate-y-1/2 h-20 bg-red-400 rounded-full",
+        "w-20 flex justify-center items-center  bg-center bg-cover bg-no-repeat  -translate-y-1/2 h-20 bg-red-400 rounded-full",
         className
       )}
     >
