@@ -19,6 +19,7 @@ export default function Home() {
 
   useEffect(() => {
     function onMove(e: PointerEvent) {
+      e.preventDefault();
       if (!draggedId.current) return;
       const dx = e.clientX - prevPointPosition.current.x;
       const dy = e.clientY - prevPointPosition.current.y;
@@ -38,7 +39,7 @@ export default function Home() {
       });
     }
 
-    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointermove", onMove, { passive: false });
     return () => window.removeEventListener("pointermove", onMove);
   }, []);
 
@@ -50,6 +51,8 @@ export default function Home() {
   }, []);
 
   const handleClick = (e: React.PointerEvent<HTMLDivElement>, id: string) => {
+    e.preventDefault();
+    e.currentTarget.setPointerCapture(e.pointerId);
     if (draggedId.current === id) {
       draggedId.current = null;
       return;
@@ -84,7 +87,9 @@ function Avatar({
       key={player.id}
       onPointerDown={(e) => handleClick(e, player.id)}
       className={cn(
-        "md:w-20 w-10 md:h-20 flex justify-center items-center  bg-center bg-cover bg-no-repeat  -translate-y-1/2 h-10 bg-red-400 rounded-full"
+        "md:w-20 w-10 md:h-20 flex justify-center items-center  bg-center bg-cover bg-no-repeat  -translate-y-1/2 h-10 bg-red-400 rounded-full",
+        "cursor-grab active:cursor-grabbing select-none",
+        "touch-none"
       )}
       style={{
         transform: `translate(${player.x}px, ${player.y}px)`,
