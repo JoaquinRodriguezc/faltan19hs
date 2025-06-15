@@ -93,7 +93,8 @@ function Avatar({
       className={cn(
         "md:w-20 w-10 md:h-20 flex justify-center items-center  bg-center bg-cover bg-no-repeat  -translate-y-1/2 h-10 bg-red-400 rounded-full",
         "cursor-grab active:cursor-grabbing select-none",
-        "touch-none"
+        "touch-none",
+        "-rotate-90 md:rotate-0"
       )}
       style={{
         transform: `translate(${player.x}px, ${player.y}px)`,
