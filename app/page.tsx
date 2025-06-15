@@ -21,14 +21,12 @@ export default function Home() {
     function onMove(e: PointerEvent) {
       e.preventDefault();
       if (!draggedId.current) return;
-      const rotated = window.matchMedia("(max-width: 767px)").matches; // same cutoff as md:
+      const rotated = window.matchMedia("(max-width: 767px)").matches;
 
       const dx = e.clientX - prevPointPosition.current.x;
       const dy = e.clientY - prevPointPosition.current.y;
 
-      const [dxLocal, dyLocal] = rotated
-        ? [dy, -dx] // 90° clockwise:  x' =  dy,  y' = -dx
-        : [dx, dy];
+      const [dxLocal, dyLocal] = rotated ? [dy, -dx] : [dx, dy];
 
       setPlayers((prev) => {
         const updated = prev.map((p) =>
@@ -70,7 +68,7 @@ export default function Home() {
     startPosition.current = { x, y };
   };
   return (
-    <div className="relative h-screen w-screen bg-contain bg-[url(/field.jpg)] bg-no-repeat bg-center rotate-90 md:rotate-0 flex items-center justify-center origin-center">
+    <div className="relative h-screen w-screen z-0 bg-contain bg-[url(/field.jpg)] bg-no-repeat bg-center rotate-90 md:rotate-0 flex items-center justify-center origin-center">
       {players &&
         players.map((player) => {
           return (
