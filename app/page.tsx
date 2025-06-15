@@ -21,16 +21,22 @@ export default function Home() {
     function onMove(e: PointerEvent) {
       e.preventDefault();
       if (!draggedId.current) return;
+      const rotated = window.matchMedia("(max-width: 767px)").matches; // same cutoff as md:
+
       const dx = e.clientX - prevPointPosition.current.x;
       const dy = e.clientY - prevPointPosition.current.y;
+
+      const [dxLocal, dyLocal] = rotated
+        ? [dy, -dx] // 90° clockwise:  x' =  dy,  y' = -dx
+        : [dx, dy];
 
       setPlayers((prev) => {
         const updated = prev.map((p) =>
           p.id === draggedId.current
             ? {
                 ...p,
-                x: startPosition.current.x + dx,
-                y: startPosition.current.y + dy,
+                x: startPosition.current.x + dxLocal,
+                y: startPosition.current.y + dyLocal,
               }
             : p
         );
