@@ -1,67 +1,96 @@
-import { getImageProps } from "next/image";
+"use client";
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { ClassValue } from "clsx";
-
-function getBackgroundImage(srcSet = "") {
-  const imageSet = srcSet
-    .split(", ")
-    .map((str) => {
-      const [url, dpi] = str.split(" ");
-      return `url("${url}") ${dpi}`;
-    })
-    .join(", ");
-  return `image-set(${imageSet})`;
-}
-
+import { useEffect, useRef, useState } from "react";
+import { players as data, Player, Point } from "./players";
 export default function Home() {
-  const {
-    props: { srcSet },
-  } = getImageProps({ alt: "", width: 1200, height: 1200, src: "/field.jpg" });
+  const [players, setPlayers] = useState(data);
 
-  const backgroundImage = getBackgroundImage(srcSet);
+  const draggedId = useRef<string | null>(null);
+  const startPosition = useRef<Point>({
+    x: 0,
+    y: 0,
+  });
+  const prevPointPosition = useRef<Point>({
+    x: 0,
+    y: 0,
+  });
 
+  useEffect(() => {
+    function onMove(e: PointerEvent) {
+      if (!draggedId.current) return;
+      const dx = e.clientX - prevPointPosition.current.x;
+      const dy = e.clientY - prevPointPosition.current.y;
+
+      setPlayers((prev) => {
+        const updated = prev.map((p) =>
+          p.id === draggedId.current
+            ? {
+                ...p,
+                x: startPosition.current.x + dx,
+                y: startPosition.current.y + dy,
+              }
+            : p
+        );
+        localStorage.setItem("players", JSON.stringify(updated));
+        return updated;
+      });
+    }
+
+    window.addEventListener("pointermove", onMove);
+    return () => window.removeEventListener("pointermove", onMove);
+  }, []);
+
+  useEffect(() => {
+    const existingPlayers = localStorage.getItem("players");
+    if (existingPlayers) {
+      setPlayers(JSON.parse(existingPlayers));
+    }
+  }, []);
+
+  const handleClick = (e: React.PointerEvent<HTMLDivElement>, id: string) => {
+    if (draggedId.current === id) {
+      draggedId.current = null;
+      return;
+    }
+
+    draggedId.current = id;
+    prevPointPosition.current = { x: e.clientX, y: e.clientY };
+    const { x, y } = players.find((p) => p.id === id)!;
+    startPosition.current = { x, y };
+  };
   return (
-    <main
-      className=" relative h-screen w-screen bg-contain bg-no-repeat bg-center bg-green-900 flex items-center justify-center"
-      style={{ backgroundImage }}
-    >
-      <Avatar className="absolute top-[50%] left-60 bg-[url(/lauti.png)] " />
-      <Avatar className="absolute top-[50%] left-120 bg-[url(/jero.png)]" />
-      <Avatar className="absolute top-[20%] left-120 bg-[url(/mati.png)]" />
-      <Avatar className="absolute bottom-[10%] left-120 bg-[url(/joaco.png)]" />
-      <Avatar name="EM" className="absolute top-[50%] left-180 bg-blue-500" />
-      <Avatar className="absolute top-[20%] left-180 bg-[url(/giuli.png)]" />
-      <Avatar className="absolute bottom-[10%] left-180 bg-[url(/agus.png)]" />
-      {/* otro equipo */}
-
-      <Avatar name="NN" className="absolute top-[50%] right-60  " />
-      <Avatar name="NN" className="absolute top-[50%] right-120" />
-      <Avatar name="NN" className="absolute top-[20%] right-120" />
-      <Avatar name="NN" className="absolute bottom-[10%] right-120 " />
-      <Avatar name="NN" className="absolute top-[50%] right-180" />
-      <Avatar name="NN" className="absolute top-[20%] right-180 " />
-      <Avatar name="NN" className="absolute bottom-[10%] right-180 " />
-    </main>
+    <div className="relative h-screen w-screen bg-contain bg-[url(/field.jpg)] bg-no-repeat bg-center rotate-90 md:rotate-0 flex items-center justify-center origin-center">
+      {players &&
+        players.map((player) => {
+          return (
+            <Avatar key={player.id} player={player} handleClick={handleClick} />
+          );
+        })}
+    </div>
   );
 }
 
 function Avatar({
-  name,
-  className = "",
+  player,
+  handleClick,
 }: {
-  name?: string;
-  className: string;
+  player: Player;
+  handleClick: (e: React.PointerEvent<HTMLDivElement>, id: string) => void;
 }) {
   return (
     <div
+      key={player.id}
+      onPointerDown={(e) => handleClick(e, player.id)}
       className={cn(
-        "w-20 flex justify-center items-center  bg-center bg-cover bg-no-repeat  -translate-y-1/2 h-20 bg-red-400 rounded-full",
-        className
+        "md:w-20 w-10 md:h-20 flex justify-center items-center  bg-center bg-cover bg-no-repeat  -translate-y-1/2 h-10 bg-red-400 rounded-full"
       )}
-    >
-      {name}
-    </div>
+      style={{
+        transform: `translate(${player.x}px, ${player.y}px)`,
+        backgroundImage: `url(${player.image})`,
+      }}
+    ></div>
   );
 }
 function cn(...inputs: ClassValue[]) {
