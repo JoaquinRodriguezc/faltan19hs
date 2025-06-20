@@ -47,6 +47,11 @@ export default function Home() {
   useEffect(() => {
     const existingPlayers = localStorage.getItem("players");
     if (existingPlayers) {
+      const parsedP = JSON.parse(existingPlayers);
+      if (parsedP.length === 7) {
+        setPlayers(players);
+        return;
+      }
       setPlayers(JSON.parse(existingPlayers));
     }
   }, []);
